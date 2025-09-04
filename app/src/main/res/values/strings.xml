@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Hidratei</string>
+    <string name="nome">Nome</string>
+    <string name="peso">Peso</string>
+    <string name="cadastrar">Cadastrar</string>
+    <string name="nome_completo">Nome Completo</string>
+    <string name="peso_atual">Peso Atual</string>
+    <string name="usuario_cadastrado">Usuário cadastrado</string>
+    <string name="faltou_entrar_com_o_nome">Faltou entrar com o nome!</string>
+    <string name="faltou_colocar_o_peso_atual">Faltou colocar o Peso Atual!</string>
+    <string name="limpar">Limpar</string>
+    <string name="nome_valor">"Nome: "</string>
+    <string name="peso_valor">"Peso: "</string>
+    <string name="peso_deve_ser_um_numero_inteiro">Peso deve ser um número inteiro!</string>
+    <string name="as_entradas_foram_apagadas">As entradas foram apagadas!</string>
+    <string name="sugestao_meta">Sugestão de Meta</string>
+    <string name="nao_quer_sugestao_de_meta">Não quer sugestão de meta!</string>
+    <string name="feminino">Feminino</string>
+    <string name="masculino">Masculino</string>
+    <string name="faltou_preencher_o_genero">faltou preencher o gênero!</string>
+    <string name="genero_usado">"Gênero: "</string>
+    <string name="tipo">Tipo:</string>
+    <string name="textGenero">"Gênero: "</string>
+    <string name="ml">ml</string>
+    <string name="litros">L</string>
+    <string name="faltou_exibir_o_tipo">faltou exibir o tipo!</string>
+    <string name="tipo_valor">"Tipo: "</string>
+</resources>
