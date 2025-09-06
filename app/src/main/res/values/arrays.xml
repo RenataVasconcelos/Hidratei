@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tipos">
+        <item>@string/ml</item>
+        <item>@string/litros</item>
+    </string-array>
+
+    <string-array name="pessoas_nome">
+        <item>João Silva</item>
+        <item>Maria de Souza</item>
+        <item>Pedro Henrique</item>
+        <item>Gustavo Santos</item>
+        <item>Paulo Filipe</item>
+        <item>Elba Célia</item>
+        <item>Adelite Meira</item>
+        <item>Crisomar Pinto</item>
+        <item>Bianca Andrade</item>
+        <item>Rida de Cassia</item>
+    </string-array>
+
+    <integer-array name="pessoas_peso">
+        <item>60</item>
+        <item>90</item>
+        <item>50</item>
+        <item>55</item>
+        <item>76</item>
+        <item>87</item>
+        <item>68</item>
+        <item>70</item>
+        <item>55</item>
+        <item>71</item>
+    </integer-array>
+
+    <integer-array name="pessoas_sugestao">
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+    </integer-array>
+
+    <integer-array name="pessoas_tipos">
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+    </integer-array>
+
+    <integer-array name="pessoas_genero">
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+    </integer-array>
+
+</resources>

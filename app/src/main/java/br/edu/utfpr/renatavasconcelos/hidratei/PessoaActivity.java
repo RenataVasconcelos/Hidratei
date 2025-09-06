@@ -31,19 +31,19 @@ public class PessoaActivity extends AppCompatActivity {
         radioGroupGenero = findViewById(R.id.radioGroupGenero);
         spinnerTipo = findViewById(R.id.spinnerTipo);
 
-        popularSpinner();
+       // popularSpinner();
 
     }
-        private void popularSpinner(){
-            ArrayList<String> lista = new ArrayList<>();
-            lista.add(getString(R.string.ml));
-            lista.add(getString(R.string.litros));
-
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                                                            android.R.layout.simple_list_item_1,
-                                                            lista);
-            spinnerTipo.setAdapter(adapter);
-        }
+//        private void popularSpinner(){
+//            ArrayList<String> lista = new ArrayList<>();
+//            lista.add(getString(R.string.ml));
+//            lista.add(getString(R.string.litros));
+//
+//            ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+//                                                            android.R.layout.simple_list_item_1,
+//                                                            lista);
+//            spinnerTipo.setAdapter(adapter);
+//        }
     public void limparDados(View view){
         editTextNome.setText(null);
         editTextPeso.setText(null);
