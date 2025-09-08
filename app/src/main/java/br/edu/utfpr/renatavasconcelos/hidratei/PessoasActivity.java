@@ -1,8 +1,11 @@
 package br.edu.utfpr.renatavasconcelos.hidratei;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +22,8 @@ public class PessoasActivity extends AppCompatActivity {
 
     private List<Pessoa> listaPessoas;
 
+    private PessoaAdapter pessoaAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +31,20 @@ public class PessoasActivity extends AppCompatActivity {
 
         listViewPessoas = findViewById(R.id.listViewPessoas);
 
+        listViewPessoas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent,
+                                    View view,
+                                    int position,
+                                    long id) {
+                Pessoa pessoa = (Pessoa) listViewPessoas.getItemAtPosition(position);
+                Toast.makeText(getApplicationContext(),
+                        getString(R.string.pessoa_de_nome) + pessoa.getNome() + getString(R.string.foi_clicada),
+                        Toast.LENGTH_LONG).show();
+
+
+            }
+        });
         popularListaPessoas();
         }
 
@@ -60,10 +79,8 @@ public class PessoasActivity extends AppCompatActivity {
                 listaPessoas.add(pessoa);
             }
 
-            ArrayAdapter<Pessoa> adapter = new ArrayAdapter<>(this,
-                                                                android.R.layout.simple_list_item_1,
-                                                                listaPessoas);
-            listViewPessoas.setAdapter(adapter);
+           pessoaAdapter = new PessoaAdapter(this, listaPessoas);
+            listViewPessoas.setAdapter(pessoaAdapter);
 
 
 

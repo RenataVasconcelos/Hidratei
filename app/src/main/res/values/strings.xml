@@ -25,4 +25,6 @@
     <string name="litros">L</string>
     <string name="faltou_exibir_o_tipo">faltou exibir o tipo!</string>
     <string name="tipo_valor">"Tipo: "</string>
+    <string name="pessoa_de_nome">Pessoa de nome \"</string>
+    <string name="foi_clicada">\"\n foi clicada!</string>
 </resources>
