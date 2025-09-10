@@ -27,4 +27,5 @@
     <string name="tipo_valor">"Tipo: "</string>
     <string name="pessoa_de_nome">Pessoa de nome \"</string>
     <string name="foi_clicada">\"\n foi clicada!</string>
+    <string name="recebeu_um_click_longo">\"\nRecebeu um click longo</string>
 </resources>
