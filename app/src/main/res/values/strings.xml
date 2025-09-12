@@ -28,4 +28,9 @@
     <string name="pessoa_de_nome">Pessoa de nome \"</string>
     <string name="foi_clicada">\"\n foi clicada!</string>
     <string name="recebeu_um_click_longo">\"\nRecebeu um click longo</string>
+    <string name="logo_agua">Logo que é um copo de agua</string>
+    <string name="descricao">Aplicativo para controle pessoal de ingestão de água</string>
+    <string name="autoria">Autor(a): Renata Ingryd Alves de Vasconcelos</string>
+    <string name="sobre">Sobre</string>
+    <string name="controle_de_pessoas">Controle de pessoas</string>
 </resources>
