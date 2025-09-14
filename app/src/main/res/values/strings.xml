@@ -29,10 +29,15 @@
     <string name="foi_clicada">\"\n foi clicada!</string>
     <string name="recebeu_um_click_longo">\"\nRecebeu um click longo</string>
     <string name="logo_agua">Logo que é um copo de agua</string>
-    <string name="descricao">Aplicativo para controle pessoal de ingestão de água</string>
-    <string name="autoria">Autor(a): Renata Ingryd Alves de Vasconcelos</string>
+    <string name="descricao">Aplicativo para controle pessoal de ingestão de água para a disciplina de Desenvolvimento Java Para Dispositivos Móveis, da UTFPR</string>
+    <string name="autoria">Autor(a): <a href = "https://github.com/RenataVasconcelos">Renata Ingryd Alves de Vasconcelos</a> </string>
     <string name="sobre">Sobre</string>
     <string name="controle_de_pessoas">Controle de pessoas</string>
     <string name="adicionar">Adicionar</string>
     <string name="novo_cadastro">Novo Cadastro</string>
+    <string name="site_utfpr">www.utfpr.edu.br</string>
+    <string name="email_autor"><u>renatavasconcelos@alunos.utfpr.edu.br</u></string>
+    <string name="nenhum_aplicativo_para_abrir_paginas_web">Nenhum aplicativo para abrir páginas web</string>
+    <string name="nenhum_aplicativo_para_enviar_um_email">Nenhum aplicativo para enviar um e-mail</string>
+    <string name="contato_pelo_aplicativo">Contato pelo Aplicativo</string>
 </resources>
