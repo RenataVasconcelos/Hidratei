@@ -1,5 +1,6 @@
 package br.edu.utfpr.renatavasconcelos.hidratei;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +11,11 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -80,15 +86,15 @@ public class PessoasActivity extends AppCompatActivity {
 
         private void popularListaPessoas(){
 
-            String[] pessoas_nomes = getResources().getStringArray(R.array.pessoas_nome);
-            int[] pessoas_peso = getResources().getIntArray(R.array.pessoas_peso);
-            int[] pessoas_sugestao = getResources().getIntArray(R.array.pessoas_sugestao);
-            int[] pessoas_tipos = getResources().getIntArray(R.array.pessoas_tipos);
-            int[] pessoas_genero = getResources().getIntArray(R.array.pessoas_genero);
+//            String[] pessoas_nomes = getResources().getStringArray(R.array.pessoas_nome);
+//            int[] pessoas_peso = getResources().getIntArray(R.array.pessoas_peso);
+//            int[] pessoas_sugestao = getResources().getIntArray(R.array.pessoas_sugestao);
+//            int[] pessoas_tipos = getResources().getIntArray(R.array.pessoas_tipos);
+//            int[] pessoas_genero = getResources().getIntArray(R.array.pessoas_genero);
 
             listaPessoas = new ArrayList<>();
 
-            Pessoa pessoa;
+           /* Pessoa pessoa;
             boolean sugestao;
             Genero genero;
 
@@ -107,7 +113,7 @@ public class PessoasActivity extends AppCompatActivity {
                                     genero);
 
                 listaPessoas.add(pessoa);
-            }
+            }*/
 
            pessoaRecyclerViewAdapter = new PessoaRecyclerViewAdapter(this, listaPessoas, onItemClickListener);
             recyclerViewPessoas.setAdapter(pessoaRecyclerViewAdapter);
@@ -118,4 +124,36 @@ public class PessoasActivity extends AppCompatActivity {
             Intent intentAbertura = new Intent(this, SobreActivity.class);
             startActivity(intentAbertura);
         }
-    }
+        ActivityResultLauncher<Intent> launcherNovaPessoa = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == PessoasActivity.RESULT_OK){
+
+                            Intent intent = result.getData();
+                            Bundle bundle = intent.getExtras();
+
+                            if (bundle != null){
+                                String nome      = bundle.getString(PessoaActivity.KEY_NOME);
+                                int peso         = bundle.getInt(PessoaActivity.KEY_PESO);
+                                boolean sugestao = bundle.getBoolean(PessoaActivity.KEY_SUGESTAO);
+                                int tipo         = bundle.getInt(PessoaActivity.KEY_TIPO);
+                                String generoTexto    = bundle.getString(PessoaActivity.KEY_GENERO);
+
+                                Pessoa pessoa = new Pessoa(nome, peso, sugestao, tipo, Genero.valueOf(generoTexto));
+
+                                listaPessoas.add(pessoa);
+
+                                pessoaRecyclerViewAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    }
+                });
+
+        public void abrirNovaPessoa(View view){
+
+            Intent intentAbertura = new Intent(this, PessoaActivity.class);
+
+            launcherNovaPessoa.launch(intentAbertura);
+        }
+}

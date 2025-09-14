@@ -1,7 +1,9 @@
 package br.edu.utfpr.renatavasconcelos.hidratei;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -12,9 +14,17 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.lang.reflect.Array;
+import java.security.Key;
 import java.util.ArrayList;
 
 public class PessoaActivity extends AppCompatActivity {
+    public static final String KEY_NOME = "KEY_NOME";
+    public static final String KEY_PESO = "KEY_PESO";
+    public static final String KEY_SUGESTAO = "KEY_SUGESTAO";
+    public static final String KEY_TIPO = "KEY_TIPO";
+    public static final String KEY_GENERO = "KEY_GENERO";
+
+
     private EditText editTextNome, editTextPeso;
     private CheckBox checkBoxSugestao;
     private RadioGroup radioGroupGenero;
@@ -25,6 +35,8 @@ public class PessoaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pessoa);
 
+        setTitle(getString(R.string.novo_cadastro));
+
         editTextNome = findViewById(R.id.editTextNome);
         editTextPeso = findViewById(R.id.editTextPeso);
         checkBoxSugestao = findViewById(R.id.checkBoxSugestao);
@@ -34,16 +46,7 @@ public class PessoaActivity extends AppCompatActivity {
        // popularSpinner();
 
     }
-//        private void popularSpinner(){
-//            ArrayList<String> lista = new ArrayList<>();
-//            lista.add(getString(R.string.ml));
-//            lista.add(getString(R.string.litros));
-//
-//            ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-//                                                            android.R.layout.simple_list_item_1,
-//                                                            lista);
-//            spinnerTipo.setAdapter(adapter);
-//        }
+
     public void limparDados(View view){
         editTextNome.setText(null);
         editTextPeso.setText(null);
@@ -96,20 +99,22 @@ public class PessoaActivity extends AppCompatActivity {
             return;
         }
         int radioButtonId = radioGroupGenero.getCheckedRadioButtonId();
-        String genero;
+
+        Genero genero;
+
         if (radioButtonId == R.id.radioButtonFeminino){
-            genero = getString(R.string.feminino);
+            genero = Genero.Feminino;
         } else
             if (radioButtonId == R.id.radioButtonMasculino){
-                genero = getString(R.string.masculino);
+                genero = Genero.Masculino;
         } else{
                 Toast.makeText(this,
                         R.string.faltou_preencher_o_genero,
                         Toast.LENGTH_LONG).show();
                 return;
         }
-        String tipo = (String) spinnerTipo.getSelectedItem();
-        if (tipo == null){
+        int tipo = spinnerTipo.getSelectedItemPosition();
+        if (tipo == AdapterView.INVALID_POSITION){
             Toast.makeText(this,
                             R.string.faltou_exibir_o_tipo,
                              Toast.LENGTH_LONG).show();
@@ -117,12 +122,17 @@ public class PessoaActivity extends AppCompatActivity {
         }
         boolean sugestao = checkBoxSugestao.isChecked();
 
-        Toast.makeText(this,
-                    getString(R.string.nome_valor) + nome + "\n" +
-                        getString(R.string.peso_valor) + peso + "\n" +
-                        (sugestao ? getString(R.string.sugestao_meta) : getString(R.string.nao_quer_sugestao_de_meta)) + "\n" +
-                        getString(R.string.genero_usado) + genero + "\n" +
-                        getString(R.string.tipo_valor) + tipo,
-                        Toast.LENGTH_LONG).show();
+        Intent intentResposta = new Intent();
+
+        intentResposta.putExtra(KEY_NOME, nome);
+        intentResposta.putExtra(KEY_PESO, peso);
+        intentResposta.putExtra(KEY_SUGESTAO, sugestao);
+        intentResposta.putExtra(KEY_TIPO, tipo);
+        intentResposta.putExtra(KEY_GENERO, genero.toString());
+
+        setResult(PessoaActivity.RESULT_OK, intentResposta);
+
+        finish();
+
     }
 }
