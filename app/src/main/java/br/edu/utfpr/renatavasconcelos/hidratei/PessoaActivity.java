@@ -2,6 +2,8 @@ package br.edu.utfpr.renatavasconcelos.hidratei;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -11,6 +13,7 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.lang.reflect.Array;
@@ -47,7 +50,7 @@ public class PessoaActivity extends AppCompatActivity {
 
     }
 
-    public void limparDados(View view){
+    public void limparDados(){
         editTextNome.setText(null);
         editTextPeso.setText(null);
         checkBoxSugestao.setChecked(false);
@@ -60,7 +63,7 @@ public class PessoaActivity extends AppCompatActivity {
                 R.string.as_entradas_foram_apagadas,
                 Toast.LENGTH_LONG).show();
     }
-    public void cadastro(View view){
+    public void cadastro(){
         String nome = editTextNome.getText().toString();
         if (nome == null || nome.trim().isEmpty()){
             Toast.makeText( this,
@@ -134,5 +137,28 @@ public class PessoaActivity extends AppCompatActivity {
 
         finish();
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.pessoas_opcoes, menu );
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int idMenuItem = item.getItemId();
+
+        if (idMenuItem == R.id.menuItemCadastrar){
+            cadastro();
+            return true;
+        }else{
+            if (idMenuItem == R.id.menuItemLimpar){
+                limparDados();
+                return true;
+            }else{
+                return super.onOptionsItemSelected(item);
+            }
+        }
     }
 }
