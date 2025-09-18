@@ -40,4 +40,7 @@
     <string name="nenhum_aplicativo_para_abrir_paginas_web">Nenhum aplicativo para abrir páginas web</string>
     <string name="nenhum_aplicativo_para_enviar_um_email">Nenhum aplicativo para enviar um e-mail</string>
     <string name="contato_pelo_aplicativo">Contato pelo Aplicativo</string>
+    <string name="editar">Editar</string>
+    <string name="excluir">Excluir</string>
+    <string name="editar_pessoa">Editar Pessoa</string>
 </resources>

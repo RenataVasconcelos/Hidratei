@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -26,25 +27,69 @@ public class PessoaActivity extends AppCompatActivity {
     public static final String KEY_SUGESTAO = "KEY_SUGESTAO";
     public static final String KEY_TIPO = "KEY_TIPO";
     public static final String KEY_GENERO = "KEY_GENERO";
+    public static final String KEY_MODO = "MODO";
 
+    public static final int MODO_NOVO = 0;
+    public static final int MODO_EDITAR = 1;
 
     private EditText editTextNome, editTextPeso;
     private CheckBox checkBoxSugestao;
     private RadioGroup radioGroupGenero;
+    private RadioButton radioButtonFeminino, radioButtonMasculino;
     private Spinner spinnerTipo;
+    private int modo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pessoa);
 
-        setTitle(getString(R.string.novo_cadastro));
-
         editTextNome = findViewById(R.id.editTextNome);
         editTextPeso = findViewById(R.id.editTextPeso);
         checkBoxSugestao = findViewById(R.id.checkBoxSugestao);
         radioGroupGenero = findViewById(R.id.radioGroupGenero);
         spinnerTipo = findViewById(R.id.spinnerTipo);
+        radioButtonFeminino = findViewById(R.id.radioButtonFeminino);
+        radioButtonMasculino = findViewById(R.id.radioButtonMasculino);
+
+
+        Intent intentAbertura = getIntent();
+        Bundle bundle = intentAbertura.getExtras();
+
+        if (bundle != null){
+            modo = bundle.getInt(KEY_MODO);
+            if (modo == MODO_NOVO){
+                setTitle(getString(R.string.novo_cadastro));
+            }else {
+                setTitle(getString(R.string.editar_pessoa));
+
+                String nome      = bundle.getString(PessoaActivity.KEY_NOME);
+                int peso         = bundle.getInt(PessoaActivity.KEY_PESO);
+                boolean sugestao = bundle.getBoolean(PessoaActivity.KEY_SUGESTAO);
+                int tipo         = bundle.getInt(PessoaActivity.KEY_TIPO);
+                String generoTexto    = bundle.getString(PessoaActivity.KEY_GENERO);
+
+                Genero genero = Genero.valueOf(generoTexto);
+
+                editTextNome.setText(nome);
+                editTextPeso.setText(String.valueOf(peso));
+                checkBoxSugestao.setChecked(sugestao);
+                spinnerTipo.setSelection(tipo);
+
+                if (genero == Genero.Feminino){
+                    radioButtonFeminino.setChecked(true);
+
+                }else{
+                    if (genero == Genero.Masculino){
+                        radioButtonMasculino.setChecked(true);
+                    }else{
+
+                    }
+                }
+
+
+            }
+        }
 
        // popularSpinner();
 
@@ -141,7 +186,7 @@ public class PessoaActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.pessoas_opcoes, menu );
+        getMenuInflater().inflate(R.menu.pessoa_opcoes, menu );
         return true;
     }
 

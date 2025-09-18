@@ -6,6 +6,7 @@
         android:id="@+id/menuItemAdicionar"
         android:icon="@android:drawable/ic_menu_add"
         android:title="@string/adicionar"
+        android:visible="true"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/menuItemSobre"

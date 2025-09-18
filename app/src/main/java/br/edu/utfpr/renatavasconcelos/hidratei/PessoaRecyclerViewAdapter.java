@@ -1,7 +1,9 @@
 package br.edu.utfpr.renatavasconcelos.hidratei;
 
 import android.content.Context;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -13,19 +15,37 @@ import java.util.List;
 
 public class PessoaRecyclerViewAdapter extends RecyclerView.Adapter<PessoaRecyclerViewAdapter.PessoaHolder> {
     private OnItemClickListener onItemClickListener;
+    private OnItemLongClickListener onItemLongClickListener;
+    private OnCreateContextMenu onCreateContextMenu;
+    private OnContextMenuClickListener onContextMenuClickListener;
     private Context context;
     private List<Pessoa> listaPessoas;
 
     private String[] tipos;
 
-    public interface OnItemClickListener {
-
+    interface OnItemClickListener {
         void onItemClick(View view, int position);
+    }
 
+    interface OnItemLongClickListener {
         void onItemLongClick(View view, int position);
     }
 
-    public class PessoaHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+    interface OnCreateContextMenu{
+        void onCreateContextMenu(ContextMenu menu,
+                                 View v,
+                                 ContextMenu.ContextMenuInfo menuInfo,
+                                 int position,
+                                 MenuItem.OnMenuItemClickListener menuItemClickListener);
+    }
+
+    interface OnContextMenuClickListener{
+        boolean onContextMenuItemClick(MenuItem menuItem, int position);
+    }
+
+    public class PessoaHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
+                                                                         View.OnLongClickListener,
+                                                                         View.OnCreateContextMenuListener{
         public TextView textViewValorNome;
         public TextView textViewValorPeso;
         public TextView textViewValorSugestao;
@@ -43,41 +63,51 @@ public class PessoaRecyclerViewAdapter extends RecyclerView.Adapter<PessoaRecycl
 
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
+            itemView.setOnCreateContextMenuListener(this);
         }
 
         @Override
         public void onClick(View v) {
             if (onItemClickListener != null) {
-
-                int pos = getAdapterPosition();
-
-                if (pos != RecyclerView.NO_POSITION) {
-                    onItemClickListener.onItemClick(v, pos);
+                onItemClickListener.onItemClick(v, getAdapterPosition());
                 }
-
             }
-        }
 
         @Override
         public boolean onLongClick(View v) {
-            if (onItemClickListener != null) {
-
-                int pos = getAdapterPosition();
-
-                if (pos != RecyclerView.NO_POSITION) {
-                    onItemClickListener.onItemLongClick(v, pos);
-                    return true;
-                }
+            if (onItemLongClickListener != null) {
+                onItemLongClickListener.onItemLongClick(v, getAdapterPosition());
+                return true;
 
             }
             return false;
         }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            if (onCreateContextMenu != null){
+                onCreateContextMenu.onCreateContextMenu(menu,
+                                                        v,
+                                                        menuInfo,
+                                                        getAdapterPosition(),
+                                                        onMenuItemClickListener);
+            }
+        }
+        MenuItem.OnMenuItemClickListener onMenuItemClickListener = new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(@NonNull MenuItem item) {
+                if (onContextMenuClickListener != null){
+                    onContextMenuClickListener.onContextMenuItemClick(item, getAdapterPosition());
+                    return true;
+                }
+                return false;
+            }
+        };
     }
 
-    public PessoaRecyclerViewAdapter(Context context, List<Pessoa> listaPessoas, OnItemClickListener listener) {
+    public PessoaRecyclerViewAdapter(Context context, List<Pessoa> listaPessoas) {
         this.context = context;
         this.listaPessoas = listaPessoas;
-        this.onItemClickListener = listener;
 
         tipos = context.getResources().getStringArray(R.array.tipos);
     }
@@ -118,5 +148,37 @@ public class PessoaRecyclerViewAdapter extends RecyclerView.Adapter<PessoaRecycl
     @Override
     public int getItemCount () {
         return listaPessoas.size();
+    }
+
+    public OnItemClickListener getOnItemClickListener() {
+        return onItemClickListener;
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    public OnItemLongClickListener getOnItemLongClickListener() {
+        return onItemLongClickListener;
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener) {
+        this.onItemLongClickListener = onItemLongClickListener;
+    }
+
+    public OnCreateContextMenu getOnCreateContextMenu() {
+        return onCreateContextMenu;
+    }
+
+    public void setOnCreateContextMenu(OnCreateContextMenu onCreateContextMenu) {
+        this.onCreateContextMenu = onCreateContextMenu;
+    }
+
+    public OnContextMenuClickListener getOnContextMenuClickListener() {
+        return onContextMenuClickListener;
+    }
+
+    public void setOnContextMenuClickListener(OnContextMenuClickListener onContextMenuClickListener) {
+        this.onContextMenuClickListener = onContextMenuClickListener;
     }
 }
