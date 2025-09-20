@@ -1,6 +1,8 @@
 package br.edu.utfpr.renatavasconcelos.hidratei;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,6 +30,8 @@ public class PessoaActivity extends AppCompatActivity {
     public static final String KEY_TIPO = "KEY_TIPO";
     public static final String KEY_GENERO = "KEY_GENERO";
     public static final String KEY_MODO = "MODO";
+    public static final String KEY_SUGERIR_TIPO = "SUGERIR_TIPO";
+    public static final String KEY_ULTIMO_TIPO = "ULTIMO_TIPO";
 
     public static final int MODO_NOVO = 0;
     public static final int MODO_EDITAR = 1;
@@ -39,6 +43,8 @@ public class PessoaActivity extends AppCompatActivity {
     private Spinner spinnerTipo;
     private int modo;
     private Pessoa pessoaOriginal;
+    private boolean sugerirTipo = false;
+    private int ultimoTipo = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +59,7 @@ public class PessoaActivity extends AppCompatActivity {
         radioButtonFeminino = findViewById(R.id.radioButtonFeminino);
         radioButtonMasculino = findViewById(R.id.radioButtonMasculino);
 
+        lerPreferencias();
 
         Intent intentAbertura = getIntent();
         Bundle bundle = intentAbertura.getExtras();
@@ -60,7 +67,13 @@ public class PessoaActivity extends AppCompatActivity {
         if (bundle != null){
             modo = bundle.getInt(KEY_MODO);
             if (modo == MODO_NOVO){
+
                 setTitle(getString(R.string.novo_cadastro));
+
+                if (sugerirTipo){
+                    spinnerTipo.setSelection(ultimoTipo);
+                }
+
             }else {
                 setTitle(getString(R.string.editar_pessoa));
 
@@ -186,6 +199,8 @@ public class PessoaActivity extends AppCompatActivity {
 
         }
 
+        salvarUltimoTipo(tipo);
+
         Intent intentResposta = new Intent();
 
         intentResposta.putExtra(KEY_NOME, nome);
@@ -207,6 +222,15 @@ public class PessoaActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.menuItemSugerirTipo);
+
+        item.setChecked(sugerirTipo);
+
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int idMenuItem = item.getItemId();
 
@@ -218,8 +242,51 @@ public class PessoaActivity extends AppCompatActivity {
                 limparDados();
                 return true;
             }else{
-                return super.onOptionsItemSelected(item);
+                if (idMenuItem == R.id.menuItemSugerirTipo){
+
+                    boolean valor = !item.isChecked();
+                    salvarSugerirTipo(valor);
+                    item.setChecked(valor);
+
+                    if (sugerirTipo){
+                        spinnerTipo.setSelection(ultimoTipo);
+                    }
+                    return true;
+                }else{
+                    return super.onOptionsItemSelected(item);
+                }
             }
         }
+    }
+
+    private void lerPreferencias(){
+
+        SharedPreferences shared = getSharedPreferences(PessoasActivity.ARQUIVO_PREFERENCIAS, Context.MODE_PRIVATE);
+
+        sugerirTipo= shared.getBoolean(KEY_SUGERIR_TIPO, sugerirTipo);
+        ultimoTipo = shared.getInt(KEY_ULTIMO_TIPO, ultimoTipo);
+    }
+
+    private void salvarSugerirTipo(boolean novoValor){
+
+        SharedPreferences shared = getSharedPreferences(PessoasActivity.ARQUIVO_PREFERENCIAS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+
+        editor.putBoolean(KEY_SUGERIR_TIPO, novoValor);
+
+        editor.commit();
+
+        sugerirTipo = novoValor;
+    }
+
+    private void salvarUltimoTipo(int novoValor){
+        SharedPreferences shared = getSharedPreferences(PessoasActivity.ARQUIVO_PREFERENCIAS, Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = shared.edit();
+
+        editor.putInt(KEY_ULTIMO_TIPO, novoValor);
+        editor.commit();
+
+        ultimoTipo = novoValor;
     }
 }

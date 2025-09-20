@@ -43,4 +43,5 @@
     <string name="editar">Editar</string>
     <string name="excluir">Excluir</string>
     <string name="editar_pessoa">Editar Pessoa</string>
+    <string name="sugerir_tipo">Sugerir Tipo</string>
 </resources>

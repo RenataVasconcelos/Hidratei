@@ -47,6 +47,7 @@ public class PessoasActivity extends AppCompatActivity {
     private ActionMode actionMode;
     private View viewSelecionada;
     private Drawable backgroundDrawable;
+    public static final String ARQUIVO_PREFERENCIAS = "br.edu.utfpr.renatavasconcelos.hidratei.PREFERENCIAS";
     private ActionMode.Callback actionCallBack = new ActionMode.Callback() {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
