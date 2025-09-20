@@ -1,40 +1,32 @@
 package br.edu.utfpr.renatavasconcelos.hidratei;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.IllegalFormatCodePointException;
 import java.util.List;
 
 public class PessoasActivity extends AppCompatActivity {
@@ -48,6 +40,10 @@ public class PessoasActivity extends AppCompatActivity {
     private View viewSelecionada;
     private Drawable backgroundDrawable;
     public static final String ARQUIVO_PREFERENCIAS = "br.edu.utfpr.renatavasconcelos.hidratei.PREFERENCIAS";
+    public static final String KEY_ORDENACAO_ASCENDENTE = "ORDENACAO_ASCENDENTE";
+    public static final boolean PADRAO_INICIAL_ORDENACAO_ASCENDENTE = true;
+    private boolean ordenacaoAscendente = PADRAO_INICIAL_ORDENACAO_ASCENDENTE;
+    private MenuItem menuItemOrdenacao;
     private ActionMode.Callback actionCallBack = new ActionMode.Callback() {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -108,20 +104,7 @@ public class PessoasActivity extends AppCompatActivity {
         recyclerViewPessoas.setHasFixedSize(true);
         recyclerViewPessoas.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
 
-//        listViewPessoas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent,
-//                                    View view,
-//                                    int position,
-//                                    long id) {
-//                Pessoa pessoa = (Pessoa) listViewPessoas.getItemAtPosition(position);
-//                Toast.makeText(getApplicationContext(),
-//                        getString(R.string.pessoa_de_nome) + pessoa.getNome() + getString(R.string.foi_clicada),
-//                        Toast.LENGTH_LONG).show();
-//
-//
-//            }
-//        });
+        lerPreferencias();
 
         popularListaPessoas();
 
@@ -218,9 +201,7 @@ public class PessoasActivity extends AppCompatActivity {
 
                                 listaPessoas.add(pessoa);
 
-                                Collections.sort(listaPessoas, Pessoa.ordenacaoCrescente);
-
-                                pessoaRecyclerViewAdapter.notifyDataSetChanged();
+                                ordenarLista();
                             }
                         }
                     }
@@ -236,6 +217,13 @@ public class PessoasActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.pessoas_opcoes, menu);
+        menuItemOrdenacao = menu.findItem(R.id.menuItemOrdenacao);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        atualizarIconeOrdenacao();
         return true;
     }
 
@@ -251,10 +239,29 @@ public class PessoasActivity extends AppCompatActivity {
                 abrirSobre();
                 return true;
             }else{
-                return super.onOptionsItemSelected(item);
+                if (idMenuItem == R.id.menuItemOrdenacao){
+                    salvarPreferenciaOrdenacaoAscendente(!ordenacaoAscendente);
+                    atualizarIconeOrdenacao();
+                    ordenarLista();
+                    return true;
+                }else{
+                    if (idMenuItem == R.id.menuItemRestaurar){
+                        restaurarPadroes();
+                        atualizarIconeOrdenacao();
+                        ordenarLista();
+
+                        Toast.makeText(this,
+                                        R.string.as_configuracoes_voltaram_para_o_padrao_de_instalacao,
+                                        Toast.LENGTH_LONG).show();
+                        return true;
+                    }else{
+                        return super.onOptionsItemSelected(item);
+                    }
+                }
             }
         }
     }
+
 
     private void excluirPessoa(){
         listaPessoas.remove(posicaoSelecionada);
@@ -287,9 +294,7 @@ public class PessoasActivity extends AppCompatActivity {
                             Genero genero = Genero.valueOf(generoTexto);
                             pessoa.setGenero(genero);
 
-                            Collections.sort(listaPessoas, Pessoa.ordenacaoCrescente);
-
-                            pessoaRecyclerViewAdapter.notifyDataSetChanged();
+                            ordenarLista();
                         }
                     }
                     posicaoSelecionada = -1;
@@ -314,4 +319,49 @@ public class PessoasActivity extends AppCompatActivity {
         launcherEditarPessoa.launch(intentAbertura);
     }
 
+    private void ordenarLista(){
+
+        if (ordenacaoAscendente){
+            Collections.sort(listaPessoas, Pessoa.ordenacaoCrescente);
+        }else{
+            Collections.sort(listaPessoas, Pessoa.ordenacaoDecrescente);
+        }
+
+        pessoaRecyclerViewAdapter.notifyDataSetChanged();
+    }
+
+    private void atualizarIconeOrdenacao(){
+        if (ordenacaoAscendente){
+            menuItemOrdenacao.setIcon(R.drawable.ic_action_ascending_order);
+        }else{
+            menuItemOrdenacao.setIcon(R.drawable.ic_action_decending_order);
+        }
+    }
+    private void lerPreferencias(){
+        SharedPreferences shared = getSharedPreferences(ARQUIVO_PREFERENCIAS, Context.MODE_PRIVATE);
+        ordenacaoAscendente = shared.getBoolean(KEY_ORDENACAO_ASCENDENTE, ordenacaoAscendente);
+    }
+
+    private void salvarPreferenciaOrdenacaoAscendente(boolean novoValor){
+        SharedPreferences shared = getSharedPreferences(ARQUIVO_PREFERENCIAS, Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = shared.edit();
+
+        editor.putBoolean(KEY_ORDENACAO_ASCENDENTE, novoValor);
+
+        editor.commit();
+
+        ordenacaoAscendente = novoValor;
+    }
+
+    private void restaurarPadroes(){
+        SharedPreferences shared = getSharedPreferences(ARQUIVO_PREFERENCIAS, Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = shared.edit();
+
+        editor.clear();
+        editor.commit();
+
+        ordenacaoAscendente = PADRAO_INICIAL_ORDENACAO_ASCENDENTE;
+    }
 }

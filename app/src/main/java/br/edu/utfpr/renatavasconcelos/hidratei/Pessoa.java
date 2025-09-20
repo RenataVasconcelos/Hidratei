@@ -10,6 +10,16 @@ public class Pessoa {
 
             }
         };
+
+        public static Comparator<Pessoa> ordenacaoDecrescente = new Comparator<Pessoa>() {
+            @Override
+            public int compare(Pessoa pessoa1, Pessoa pessoa2) {
+                return -1 * pessoa1.getNome().compareToIgnoreCase(pessoa2.getNome());
+
+            }
+        };
+
+
         private String nome;
         private int peso;
         private boolean sugestao;

@@ -44,4 +44,7 @@
     <string name="excluir">Excluir</string>
     <string name="editar_pessoa">Editar Pessoa</string>
     <string name="sugerir_tipo">Sugerir Tipo</string>
+    <string name="ordenacao">Ordenação</string>
+    <string name="restaurar_padroes">Restaurar Padrões</string>
+    <string name="as_configuracoes_voltaram_para_o_padrao_de_instalacao">As configurações voltaram para o padrão de instalação</string>
 </resources>
