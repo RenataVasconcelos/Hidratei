@@ -156,7 +156,7 @@ public class PessoaActivity extends AppCompatActivity {
         }
         if (peso <= 0){
             Toast.makeText(this,
-                    "Peso deve ser maior que 0!",
+                    R.string.peso_deve_ser_maior_que_0,
                     Toast.LENGTH_LONG).show();
             editTextPeso.requestFocus();
             editTextPeso.setSelection(0, editTextPeso.getText().toString().length());

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Hidratei</string>
+    <string name="nome">Nome</string>
+    <string name="peso">Peso</string>
+    <string name="cadastrar">Cadastrar</string>
+    <string name="nome_completo">Nome Completo</string>
+    <string name="peso_atual">Peso Atual</string>
+    <string name="usuario_cadastrado">Usuário cadastrado!</string>
+    <string name="faltou_entrar_com_o_nome">Faltou entrar com o nome!</string>
+    <string name="faltou_colocar_o_peso_atual">Faltou colocar o Peso Atual!</string>
+    <string name="limpar">Limpar</string>
+    <string name="nome_valor">"Nome: "</string>
+    <string name="peso_valor">"Peso: "</string>
+    <string name="peso_deve_ser_um_numero_inteiro">Peso deve ser um número inteiro!</string>
+    <string name="as_entradas_foram_apagadas">As entradas foram apagadas!</string>
+    <string name="sugestao_meta">Sugestão de Meta</string>
+    <string name="nao_quer_sugestao_de_meta">Não quer sugestão de meta!</string>
+    <string name="feminino">Feminino</string>
+    <string name="masculino">Masculino</string>
+    <string name="faltou_preencher_o_genero">faltou preencher o gênero!</string>
+    <string name="genero_usado">"Gênero: "</string>
+    <string name="tipo">Tipo:</string>
+    <string name="textGenero">"Gênero: "</string>
+    <string name="faltou_exibir_o_tipo">faltou exibir o tipo!</string>
+    <string name="tipo_valor">"Tipo: "</string>
+    <string name="logo_agua">Logo que é um copo de agua</string>
+    <string name="descricao">Aplicativo para controle pessoal de ingestão de água para a disciplina de Desenvolvimento Java Para Dispositivos Móveis, da UTFPR</string>
+    <string name="autoria">Autor(a): <a href = "https://github.com/RenataVasconcelos">Renata Ingryd Alves de Vasconcelos</a> </string>
+    <string name="sobre">Sobre</string>
+    <string name="controle_de_pessoas">Controle de pessoas</string>
+    <string name="adicionar">Adicionar</string>
+    <string name="novo_cadastro">Novo Cadastro</string>
+    <string name="nenhum_aplicativo_para_abrir_paginas_web">Nenhum aplicativo para abrir páginas web!</string>
+    <string name="nenhum_aplicativo_para_enviar_um_email">Nenhum aplicativo para enviar um e-mail!</string>
+    <string name="contato_pelo_aplicativo">Contato pelo Aplicativo</string>
+    <string name="editar">Editar</string>
+    <string name="excluir">Excluir</string>
+    <string name="editar_pessoa">Editar Pessoa</string>
+    <string name="sugerir_tipo">Sugerir Tipo</string>
+    <string name="ordenacao">Ordenação</string>
+    <string name="restaurar_padroes">Restaurar Padrões</string>
+    <string name="as_configuracoes_voltaram_para_o_padrao_de_instalacao">As configurações voltaram para o padrão de instalação!</string>
+    <string name="peso_deve_ser_maior_que_0">Peso deve ser maior que 0!</string>
+</resources>
