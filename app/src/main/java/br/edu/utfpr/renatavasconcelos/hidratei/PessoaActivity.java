@@ -38,6 +38,7 @@ public class PessoaActivity extends AppCompatActivity {
     private RadioButton radioButtonFeminino, radioButtonMasculino;
     private Spinner spinnerTipo;
     private int modo;
+    private Pessoa pessoaOriginal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +71,8 @@ public class PessoaActivity extends AppCompatActivity {
                 String generoTexto    = bundle.getString(PessoaActivity.KEY_GENERO);
 
                 Genero genero = Genero.valueOf(generoTexto);
+
+                pessoaOriginal = new Pessoa(nome, peso, sugestao, tipo, genero);
 
                 editTextNome.setText(nome);
                 editTextPeso.setText(String.valueOf(peso));
@@ -169,6 +172,19 @@ public class PessoaActivity extends AppCompatActivity {
             return;
         }
         boolean sugestao = checkBoxSugestao.isChecked();
+
+        if(modo == MODO_EDITAR &&
+                nome.equalsIgnoreCase(pessoaOriginal.getNome()) &&
+                peso == pessoaOriginal.getPeso() &&
+                sugestao == pessoaOriginal.isSugestao() &&
+                tipo == pessoaOriginal.getTipo() &&
+                genero == pessoaOriginal.getGenero()){
+
+            setResult(PessoaActivity.RESULT_CANCELED);
+            finish();
+            return;
+
+        }
 
         Intent intentResposta = new Intent();
 

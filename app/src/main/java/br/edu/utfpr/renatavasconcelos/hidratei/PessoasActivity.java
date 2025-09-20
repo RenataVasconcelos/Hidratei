@@ -2,9 +2,12 @@ package br.edu.utfpr.renatavasconcelos.hidratei;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,6 +24,7 @@ import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ActionMode;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -29,6 +33,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class PessoasActivity extends AppCompatActivity {
@@ -38,6 +43,53 @@ public class PessoasActivity extends AppCompatActivity {
     private List<Pessoa> listaPessoas;
 
     private int posicaoSelecionada = -1;
+    private ActionMode actionMode;
+    private View viewSelecionada;
+    private Drawable backgroundDrawable;
+    private ActionMode.Callback actionCallBack = new ActionMode.Callback() {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            MenuInflater inflate = mode.getMenuInflater();
+            inflate.inflate(R.menu.pessoas_item_selecionado, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            int idMenuItem = item.getItemId();
+            if (idMenuItem == R.id.menuItemEditar){
+                editarPessoa();
+                return true;
+            }else {
+                if (idMenuItem == R.id.menuItemExcluir){
+                    excluirPessoa();
+                    mode.finish();
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+
+            if (viewSelecionada != null){
+                viewSelecionada.setBackground(backgroundDrawable);
+            }
+
+            actionMode = null;
+            viewSelecionada = null;
+            backgroundDrawable = null;
+
+            recyclerViewPessoas.setEnabled(true);
+        }
+    };
 
 
     @Override
@@ -70,7 +122,7 @@ public class PessoasActivity extends AppCompatActivity {
 //        });
 
         popularListaPessoas();
-        //registerForContextMenu(recyclerViewPessoas);
+
         }
 
         private void popularListaPessoas(){
@@ -105,42 +157,34 @@ public class PessoasActivity extends AppCompatActivity {
             }*/
 
            pessoaRecyclerViewAdapter = new PessoaRecyclerViewAdapter(this, listaPessoas);
-           pessoaRecyclerViewAdapter.setOnCreateContextMenu(new PessoaRecyclerViewAdapter.OnCreateContextMenu() {
-               @Override
-               public void onCreateContextMenu(ContextMenu menu,
-                                               View v,
-                                               ContextMenu.ContextMenuInfo menuInfo,
-                                               int position,
-                                               MenuItem.OnMenuItemClickListener menuItemClickListener) {
-                   getMenuInflater().inflate(R.menu.pessoas_item_selecionado, menu);
-                   for (int i = 0; i < menu.size(); i++){
-                       menu.getItem(i).setOnMenuItemClickListener(menuItemClickListener);
-                   }
-
-               }
-           });
-           pessoaRecyclerViewAdapter.setOnContextMenuClickListener(new PessoaRecyclerViewAdapter.OnContextMenuClickListener() {
-               @Override
-               public boolean onContextMenuItemClick(MenuItem menuItem, int position) {
-                   int idMenuItem = menuItem.getItemId();
-                   if (idMenuItem == R.id.menuItemEditar){
-                       editarPessoa(position);
-                       return true;
-                   }else {
-                       if (idMenuItem == R.id.menuItemExcluir){
-                           excluirPessoa(position);
-                           return true;
-                       }else{
-                           return false;
-                       }
-                   }
-               }
-           });
 
            pessoaRecyclerViewAdapter.setOnItemClickListener(new PessoaRecyclerViewAdapter.OnItemClickListener() {
                @Override
                public void onItemClick(View view, int position) {
-                   editarPessoa(position);
+                   posicaoSelecionada = position;
+                   editarPessoa();
+               }
+           });
+
+           pessoaRecyclerViewAdapter.setOnItemLongClickListener(new PessoaRecyclerViewAdapter.OnItemLongClickListener() {
+               @Override
+               public boolean onItemLongClick(View view, int position) {
+
+                   if (actionMode != null){
+                       return false;
+                   }
+
+                   posicaoSelecionada =  position;
+
+                   viewSelecionada = view;
+                   backgroundDrawable = view.getBackground();
+
+                   view.setBackgroundColor(Color.LTGRAY);
+
+                   recyclerViewPessoas.setEnabled(false);
+
+                   actionMode = startSupportActionMode(actionCallBack);
+                   return true;
                }
            });
 
@@ -208,8 +252,8 @@ public class PessoasActivity extends AppCompatActivity {
         }
     }
 
-    private void excluirPessoa(int posicao){
-        listaPessoas.remove(posicao);
+    private void excluirPessoa(){
+        listaPessoas.remove(posicaoSelecionada);
         pessoaRecyclerViewAdapter.notifyDataSetChanged();
 
     }
@@ -244,11 +288,12 @@ public class PessoasActivity extends AppCompatActivity {
                         }
                     }
                     posicaoSelecionada = -1;
+                    if (actionMode != null){
+                        actionMode.finish();
+                    }
                 }
             });
-    private void editarPessoa(int posicao){
-
-        posicaoSelecionada = posicao;
+    private void editarPessoa(){
 
         Pessoa pessoa = listaPessoas.get(posicaoSelecionada);
 
@@ -264,29 +309,4 @@ public class PessoasActivity extends AppCompatActivity {
         launcherEditarPessoa.launch(intentAbertura);
     }
 
-    /*@Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-
-       // getMenuInflater().inflate(R.menu.pessoas_item_selecionado, menu);
-    }
-
-    @Override
-    public boolean onContextItemSelected(@NonNull MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info;
-        info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-
-        int idMenuItem = item.getItemId();
-        if (idMenuItem == R.id.menuItemEditar){
-            return true;
-        }else {
-            if (idMenuItem == R.id.menuItemExcluir){
-                excluirPessoa(info.position);
-                return true;
-            }else{
-                return super.onContextItemSelected(item);
-            }
-        }
-
-    }*/
 }
