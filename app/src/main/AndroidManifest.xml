@@ -13,10 +13,13 @@
         android:theme="@style/Theme.ThemeStylesIcons">
         <activity
             android:name=".SobreActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".PessoasActivity"
+            />
         <activity
             android:name=".PessoasActivity"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,7 +28,10 @@
         </activity>
         <activity
             android:name=".PessoaActivity"
-            android:exported="false"></activity>
+            android:exported="false"
+            android:parentActivityName=".PessoasActivity">
+
+        </activity>
     </application>
 
 </manifest>

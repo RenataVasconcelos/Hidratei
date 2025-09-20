@@ -1,7 +1,15 @@
 package br.edu.utfpr.renatavasconcelos.hidratei;
 
-public class Pessoa {
+import java.util.Comparator;
 
+public class Pessoa {
+        public static Comparator<Pessoa> ordenacaoCrescente = new Comparator<Pessoa>() {
+            @Override
+            public int compare(Pessoa pessoa1, Pessoa pessoa2) {
+                return pessoa1.getNome().compareToIgnoreCase(pessoa2.getNome());
+
+            }
+        };
         private String nome;
         private int peso;
         private boolean sugestao;

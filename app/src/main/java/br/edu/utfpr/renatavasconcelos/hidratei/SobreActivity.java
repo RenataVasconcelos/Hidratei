@@ -3,10 +3,12 @@ package br.edu.utfpr.renatavasconcelos.hidratei;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -60,4 +62,18 @@ public class SobreActivity extends AppCompatActivity {
                     Toast.LENGTH_LONG).show();
         }
     }
+
+    /*@Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        int idMenuItem = item.getItemId();
+
+        if (idMenuItem == android.R.id.home){
+            finish();
+            return true;
+        }else{
+            return super.onOptionsItemSelected(item);
+        }
+
+    }*/
 }

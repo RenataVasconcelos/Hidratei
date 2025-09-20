@@ -34,6 +34,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class PessoasActivity extends AppCompatActivity {
@@ -216,6 +217,8 @@ public class PessoasActivity extends AppCompatActivity {
 
                                 listaPessoas.add(pessoa);
 
+                                Collections.sort(listaPessoas, Pessoa.ordenacaoCrescente);
+
                                 pessoaRecyclerViewAdapter.notifyDataSetChanged();
                             }
                         }
@@ -283,6 +286,7 @@ public class PessoasActivity extends AppCompatActivity {
                             Genero genero = Genero.valueOf(generoTexto);
                             pessoa.setGenero(genero);
 
+                            Collections.sort(listaPessoas, Pessoa.ordenacaoCrescente);
 
                             pessoaRecyclerViewAdapter.notifyDataSetChanged();
                         }
