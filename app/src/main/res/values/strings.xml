@@ -45,4 +45,11 @@
     <string name="restaurar_padroes">Restore Defaults</string>
     <string name="as_configuracoes_voltaram_para_o_padrao_de_instalacao">Settings reverted to installation default!</string>
     <string name="peso_deve_ser_maior_que_0">Weight must be greater than 0!</string>
+    <string name="aviso">Warning</string>
+    <string name="ok" translatable="false">OK</string>
+    <string name="confirmacao">Confirmation</string>
+    <string name="sim">YES</string>
+    <string name="nao">NO</string>
+    <string name="deseja_apagar">Do you want do delete?\n\"</string>
+    <string name="deseja_voltar_padroes">Do you want do restore defaults?</string>
 </resources>

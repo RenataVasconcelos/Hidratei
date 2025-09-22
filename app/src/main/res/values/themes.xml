@@ -7,4 +7,6 @@
          <item name="colorOnPrimary">@color/preto</item>
     </style>
 
+    <color name="corSelecionado">@color/azul_transparente</color>
+
 </resources>

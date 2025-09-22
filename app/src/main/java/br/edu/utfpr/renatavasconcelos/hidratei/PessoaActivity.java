@@ -23,6 +23,8 @@ import java.lang.reflect.Array;
 import java.security.Key;
 import java.util.ArrayList;
 
+import br.edu.utfpr.renatavasconcelos.hidratei.utils.UtilsAlert;
+
 public class PessoaActivity extends AppCompatActivity {
     public static final String KEY_NOME = "KEY_NOME";
     public static final String KEY_PESO = "KEY_PESO";
@@ -120,16 +122,13 @@ public class PessoaActivity extends AppCompatActivity {
 
         editTextNome.requestFocus();
 
-        Toast.makeText(this,
-                R.string.as_entradas_foram_apagadas,
-                Toast.LENGTH_LONG).show();
+        UtilsAlert.mostrarAviso(this, R.string.as_entradas_foram_apagadas);
+
     }
     public void cadastro(){
         String nome = editTextNome.getText().toString();
         if (nome == null || nome.trim().isEmpty()){
-            Toast.makeText( this,
-                    R.string.faltou_entrar_com_o_nome,
-                    Toast.LENGTH_LONG).show();
+            UtilsAlert.mostrarAviso(this, R.string.faltou_entrar_com_o_nome);
             editTextNome.requestFocus();
             return;
         }
@@ -137,9 +136,7 @@ public class PessoaActivity extends AppCompatActivity {
 
         String pesoString = editTextPeso.getText().toString();
         if (pesoString == null || pesoString.trim().isEmpty()) {
-            Toast.makeText( this,
-                    R.string.faltou_colocar_o_peso_atual,
-                    Toast.LENGTH_LONG).show();
+            UtilsAlert.mostrarAviso(this, R.string.faltou_colocar_o_peso_atual);
             editTextPeso.requestFocus();
             return;
         }
@@ -147,17 +144,14 @@ public class PessoaActivity extends AppCompatActivity {
         try {
             peso = Integer.parseInt(pesoString);
         } catch (NumberFormatException e) {
-            Toast.makeText(this,
-                    R.string.peso_deve_ser_um_numero_inteiro,
-                    Toast.LENGTH_LONG).show();
+            UtilsAlert.mostrarAviso(this, R.string.peso_deve_ser_um_numero_inteiro);
             editTextPeso.requestFocus();
             editTextPeso.setSelection(0, editTextPeso.getText().toString().length());
             return;
         }
         if (peso <= 0){
-            Toast.makeText(this,
-                    R.string.peso_deve_ser_maior_que_0,
-                    Toast.LENGTH_LONG).show();
+            UtilsAlert.mostrarAviso(this, R.string.peso_deve_ser_maior_que_0);
+
             editTextPeso.requestFocus();
             editTextPeso.setSelection(0, editTextPeso.getText().toString().length());
             return;
@@ -172,16 +166,12 @@ public class PessoaActivity extends AppCompatActivity {
             if (radioButtonId == R.id.radioButtonMasculino){
                 genero = Genero.Masculino;
         } else{
-                Toast.makeText(this,
-                        R.string.faltou_preencher_o_genero,
-                        Toast.LENGTH_LONG).show();
+                UtilsAlert.mostrarAviso(this, R.string.faltou_preencher_o_genero);
                 return;
         }
         int tipo = spinnerTipo.getSelectedItemPosition();
         if (tipo == AdapterView.INVALID_POSITION){
-            Toast.makeText(this,
-                            R.string.faltou_exibir_o_tipo,
-                             Toast.LENGTH_LONG).show();
+            UtilsAlert.mostrarAviso(this, R.string.faltou_exibir_o_tipo);
             return;
         }
         boolean sugestao = checkBoxSugestao.isChecked();

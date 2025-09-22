@@ -42,4 +42,10 @@
     <string name="restaurar_padroes">Restaurar Padrões</string>
     <string name="as_configuracoes_voltaram_para_o_padrao_de_instalacao">As configurações voltaram para o padrão de instalação!</string>
     <string name="peso_deve_ser_maior_que_0">Peso deve ser maior que 0!</string>
+    <string name="aviso">Aviso</string>
+    <string name="confirmacao">Confirmação</string>
+    <string name="sim">SIM</string>
+    <string name="nao">NÃO</string>
+    <string name="deseja_apagar">Deseja realmente apagar?\n\"</string>
+    <string name="deseja_voltar_padroes">Você deseja restaurar o padrão de instalação?</string>
 </resources>
