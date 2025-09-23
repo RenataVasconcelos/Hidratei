@@ -13,11 +13,14 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.lang.reflect.Array;
 import java.security.Key;
@@ -96,12 +99,9 @@ public class PessoaActivity extends AppCompatActivity {
 
                 if (genero == Genero.Feminino){
                     radioButtonFeminino.setChecked(true);
-
                 }else{
                     if (genero == Genero.Masculino){
                         radioButtonMasculino.setChecked(true);
-                    }else{
-
                     }
                 }
 
@@ -114,16 +114,54 @@ public class PessoaActivity extends AppCompatActivity {
     }
 
     public void limparDados(){
+
+        final String nome = editTextNome.getText().toString();
+        final String peso = editTextPeso.getText().toString();
+        final boolean sugestao = checkBoxSugestao.isChecked();
+        final int radioButtonId = radioGroupGenero.getCheckedRadioButtonId();
+        final int tipo = spinnerTipo.getSelectedItemPosition();
+
+        final ScrollView scrollView = findViewById(R.id.main);
+        final View viewComFoco = scrollView.findFocus();
+
         editTextNome.setText(null);
         editTextPeso.setText(null);
         checkBoxSugestao.setChecked(false);
         radioGroupGenero.clearCheck();
         spinnerTipo.setSelection(0);
-
         editTextNome.requestFocus();
 
-        UtilsAlert.mostrarAviso(this, R.string.as_entradas_foram_apagadas);
+        Snackbar snackbar = Snackbar.make(scrollView,
+                                          R.string.as_entradas_foram_apagadas,
+                                          Snackbar.LENGTH_LONG);
 
+        snackbar.setAction(R.string.desfazer, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editTextNome.setText(nome);
+                editTextPeso.setText(peso);
+                checkBoxSugestao.setChecked(sugestao);
+
+
+                if (radioButtonId == R.id.radioButtonFeminino){
+                    radioButtonFeminino.setChecked(true);
+
+                }else {
+                    if (radioButtonId == R.id.radioButtonMasculino) {
+                        radioButtonMasculino.setChecked(true);
+                    }
+                }
+                spinnerTipo.setSelection(tipo);
+
+                if (viewComFoco != null){
+                    viewComFoco.requestFocus();
+                }
+
+
+            }
+        });
+
+        snackbar.show();
     }
     public void cadastro(){
         String nome = editTextNome.getText().toString();

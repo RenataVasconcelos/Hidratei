@@ -48,4 +48,7 @@
     <string name="nao">NÃO</string>
     <string name="deseja_apagar">Deseja realmente apagar?\n\"</string>
     <string name="deseja_voltar_padroes">Você deseja restaurar o padrão de instalação?</string>
+    <string name="desfazer">Desfazer</string>
+    <string name="alteracao_realizada">Alteração dos dados realizada!</string>
+    <string name="erro_de_conversao_de_tipos">Erro de consersão de tipo!</string>
 </resources>

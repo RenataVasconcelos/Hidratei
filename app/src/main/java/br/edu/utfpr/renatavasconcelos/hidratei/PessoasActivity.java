@@ -21,9 +21,13 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -294,7 +298,19 @@ public class PessoasActivity extends AppCompatActivity {
                             int tipo         = bundle.getInt(PessoaActivity.KEY_TIPO);
                             String generoTexto    = bundle.getString(PessoaActivity.KEY_GENERO);
 
-                            Pessoa pessoa = listaPessoas.get(posicaoSelecionada);
+                            final Pessoa pessoa = listaPessoas.get(posicaoSelecionada);
+
+                            final Pessoa clonePessoaOriginal;
+
+                            try{
+                                clonePessoaOriginal = (Pessoa) pessoa.clone();
+                            } catch (CloneNotSupportedException e){
+                                e.printStackTrace();
+                                UtilsAlert.mostrarAviso(PessoasActivity.this,
+                                                        R.string.erro_de_conversao_de_tipos);
+                                return;
+                            }
+
                             pessoa.setNome(nome);
                             pessoa.setPeso(peso);
                             pessoa.setSugestao(sugestao);
@@ -304,6 +320,25 @@ public class PessoasActivity extends AppCompatActivity {
                             pessoa.setGenero(genero);
 
                             ordenarLista();
+
+                            final ConstraintLayout constraintLayout = findViewById(R.id.main);
+
+                            Snackbar snackbar = Snackbar.make(constraintLayout,
+                                                              R.string.alteracao_realizada,
+                                                              Snackbar.LENGTH_LONG);
+
+                            snackbar.setAction(R.string.desfazer, new View.OnClickListener() {
+
+                                @Override
+                                public void onClick(View v) {
+                                    listaPessoas.remove(pessoa);
+                                    listaPessoas.add(clonePessoaOriginal);
+
+                                    ordenarLista();
+
+                                }
+                            });
+                            snackbar.show();
                         }
                     }
                     posicaoSelecionada = -1;

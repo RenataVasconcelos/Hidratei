@@ -1,8 +1,10 @@
 package br.edu.utfpr.renatavasconcelos.hidratei;
 
+import androidx.annotation.NonNull;
+
 import java.util.Comparator;
 
-public class Pessoa {
+public class Pessoa implements Cloneable{
         public static Comparator<Pessoa> ordenacaoCrescente = new Comparator<Pessoa>() {
             @Override
             public int compare(Pessoa pessoa1, Pessoa pessoa2) {
@@ -72,6 +74,14 @@ public class Pessoa {
 
     public void setGenero(Genero genero) {
         this.genero = genero;
+    }
+
+    @NonNull
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+
+        return super.clone();
     }
 
     @Override

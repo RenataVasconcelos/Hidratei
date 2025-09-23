@@ -52,4 +52,7 @@
     <string name="nao">NO</string>
     <string name="deseja_apagar">Do you want do delete?\n\"</string>
     <string name="deseja_voltar_padroes">Do you want do restore defaults?</string>
+    <string name="desfazer">Undo</string>
+    <string name="alteracao_realizada">Data update done!</string>
+    <string name="erro_de_conversao_de_tipos">Type conversion error!</string>
 </resources>
