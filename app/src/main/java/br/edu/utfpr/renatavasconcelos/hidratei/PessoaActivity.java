@@ -8,24 +8,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import java.lang.reflect.Array;
-import java.security.Key;
-import java.util.ArrayList;
-
+import br.edu.utfpr.renatavasconcelos.hidratei.modelo.Genero;
+import br.edu.utfpr.renatavasconcelos.hidratei.modelo.Pessoa;
 import br.edu.utfpr.renatavasconcelos.hidratei.utils.UtilsAlert;
 
 public class PessoaActivity extends AppCompatActivity {

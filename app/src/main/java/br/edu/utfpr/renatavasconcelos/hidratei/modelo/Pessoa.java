@@ -1,9 +1,13 @@
-package br.edu.utfpr.renatavasconcelos.hidratei;
+package br.edu.utfpr.renatavasconcelos.hidratei.modelo;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 import java.util.Comparator;
 
+@Entity
 public class Pessoa implements Cloneable{
         public static Comparator<Pessoa> ordenacaoCrescente = new Comparator<Pessoa>() {
             @Override
@@ -21,7 +25,11 @@ public class Pessoa implements Cloneable{
             }
         };
 
+        @PrimaryKey(autoGenerate = true)
+        private long id;
 
+        @NonNull
+        @ColumnInfo(index = true)
         private String nome;
         private int peso;
         private boolean sugestao;
@@ -34,6 +42,14 @@ public class Pessoa implements Cloneable{
         this.sugestao = sugestao;
         this.tipo = tipo;
         this.genero = genero;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getNome() {
@@ -79,7 +95,7 @@ public class Pessoa implements Cloneable{
     @NonNull
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
+    public Object clone() throws CloneNotSupportedException {
 
         return super.clone();
     }
