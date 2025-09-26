@@ -33,6 +33,7 @@ import java.util.List;
 
 import br.edu.utfpr.renatavasconcelos.hidratei.modelo.Genero;
 import br.edu.utfpr.renatavasconcelos.hidratei.modelo.Pessoa;
+import br.edu.utfpr.renatavasconcelos.hidratei.persistencia.PessoasDatabase;
 import br.edu.utfpr.renatavasconcelos.hidratei.utils.UtilsAlert;
 
 public class PessoasActivity extends AppCompatActivity {
@@ -65,7 +66,9 @@ public class PessoasActivity extends AppCompatActivity {
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+
             int idMenuItem = item.getItemId();
+
             if (idMenuItem == R.id.menuItemEditar){
                 editarPessoa();
                 return true;
@@ -117,38 +120,19 @@ public class PessoasActivity extends AppCompatActivity {
 
         private void popularListaPessoas(){
 
-//            String[] pessoas_nomes = getResources().getStringArray(R.array.pessoas_nome);
-//            int[] pessoas_peso = getResources().getIntArray(R.array.pessoas_peso);
-//            int[] pessoas_sugestao = getResources().getIntArray(R.array.pessoas_sugestao);
-//            int[] pessoas_tipos = getResources().getIntArray(R.array.pessoas_tipos);
-//            int[] pessoas_genero = getResources().getIntArray(R.array.pessoas_genero);
+            PessoasDatabase database = PessoasDatabase.getInstance(this);
 
-            listaPessoas = new ArrayList<>();
+            database.getPessoaDao().queryAllAscending();
 
-           /* Pessoa pessoa;
-            boolean sugestao;
-            Genero genero;
+            if (ordenacaoAscendente){
+                listaPessoas = database.getPessoaDao().queryAllAscending();
+            }else{
+                listaPessoas= database.getPessoaDao().queryAllDownward();
+            }
 
-            Genero[] generos = Genero.values();
+            pessoaRecyclerViewAdapter = new PessoaRecyclerViewAdapter(this, listaPessoas);
 
-            for (int cont = 0; cont < pessoas_nomes.length; cont++){
-
-                sugestao = (pessoas_sugestao[cont] == 1 ? true : false);
-
-                genero = generos[pessoas_genero[cont]];
-
-                pessoa = new Pessoa(pessoas_nomes[cont],
-                                    pessoas_peso[cont],
-                                    sugestao,
-                                    pessoas_tipos[cont],
-                                    genero);
-
-                listaPessoas.add(pessoa);
-            }*/
-
-           pessoaRecyclerViewAdapter = new PessoaRecyclerViewAdapter(this, listaPessoas);
-
-           pessoaRecyclerViewAdapter.setOnItemClickListener(new PessoaRecyclerViewAdapter.OnItemClickListener() {
+            pessoaRecyclerViewAdapter.setOnItemClickListener(new PessoaRecyclerViewAdapter.OnItemClickListener() {
                @Override
                public void onItemClick(View view, int position) {
                    posicaoSelecionada = position;
@@ -197,13 +181,12 @@ public class PessoasActivity extends AppCompatActivity {
                             Bundle bundle = intent.getExtras();
 
                             if (bundle != null){
-                                String nome      = bundle.getString(PessoaActivity.KEY_NOME);
-                                int peso         = bundle.getInt(PessoaActivity.KEY_PESO);
-                                boolean sugestao = bundle.getBoolean(PessoaActivity.KEY_SUGESTAO);
-                                int tipo         = bundle.getInt(PessoaActivity.KEY_TIPO);
-                                String generoTexto    = bundle.getString(PessoaActivity.KEY_GENERO);
 
-                                Pessoa pessoa = new Pessoa(nome, peso, sugestao, tipo, Genero.valueOf(generoTexto));
+                                long id = bundle.getLong(PessoaActivity.KEY_ID);
+
+                                PessoasDatabase database = PessoasDatabase.getInstance(PessoasActivity.this);
+
+                                Pessoa pessoa = database.getPessoaDao().queryForId(id);
 
                                 listaPessoas.add(pessoa);
 
@@ -265,13 +248,23 @@ public class PessoasActivity extends AppCompatActivity {
 
     private void excluirPessoa(){
 
-        Pessoa pessoa = listaPessoas.get(posicaoSelecionada);
+        final Pessoa pessoa = listaPessoas.get(posicaoSelecionada);
 
         String mensagem = getString(R.string.deseja_apagar) + pessoa.getNome() + "\"";
 
         DialogInterface.OnClickListener listenerSim = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
+                PessoasDatabase database = PessoasDatabase.getInstance(PessoasActivity.this);
+
+                int quantidadeAlterada = database.getPessoaDao().delete(pessoa);
+
+                if (quantidadeAlterada != 1){
+                    UtilsAlert.mostrarAviso(PessoasActivity.this, R.string.erro_ao_tentar_excluir);
+                    return;
+                }
+
                 listaPessoas.remove(posicaoSelecionada);
                 pessoaRecyclerViewAdapter.notifyItemRemoved(posicaoSelecionada);
                 actionMode.finish();
@@ -291,32 +284,16 @@ public class PessoasActivity extends AppCompatActivity {
                         Bundle bundle = intent.getExtras();
 
                         if (bundle != null){
-                            String nome      = bundle.getString(PessoaActivity.KEY_NOME);
-                            int peso         = bundle.getInt(PessoaActivity.KEY_PESO);
-                            boolean sugestao = bundle.getBoolean(PessoaActivity.KEY_SUGESTAO);
-                            int tipo         = bundle.getInt(PessoaActivity.KEY_TIPO);
-                            String generoTexto    = bundle.getString(PessoaActivity.KEY_GENERO);
 
-                            final Pessoa pessoa = listaPessoas.get(posicaoSelecionada);
+                            final Pessoa pessoaOriginal = listaPessoas.get(posicaoSelecionada);
 
-                            final Pessoa clonePessoaOriginal;
+                            long id = bundle.getLong(PessoaActivity.KEY_ID);
 
-                            try{
-                                clonePessoaOriginal = (Pessoa) pessoa.clone();
-                            } catch (CloneNotSupportedException e){
-                                e.printStackTrace();
-                                UtilsAlert.mostrarAviso(PessoasActivity.this,
-                                                        R.string.erro_de_conversao_de_tipos);
-                                return;
-                            }
+                            final PessoasDatabase database = PessoasDatabase.getInstance(PessoasActivity.this);
 
-                            pessoa.setNome(nome);
-                            pessoa.setPeso(peso);
-                            pessoa.setSugestao(sugestao);
-                            pessoa.setTipo(tipo);
+                            final Pessoa pessoaEditada = database.getPessoaDao().queryForId(id);
 
-                            Genero genero = Genero.valueOf(generoTexto);
-                            pessoa.setGenero(genero);
+                            listaPessoas.set(posicaoSelecionada, pessoaEditada);
 
                             ordenarLista();
 
@@ -330,8 +307,16 @@ public class PessoasActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onClick(View v) {
-                                    listaPessoas.remove(pessoa);
-                                    listaPessoas.add(clonePessoaOriginal);
+
+                                    int quantidadeAlterada = database.getPessoaDao().update(pessoaOriginal);
+
+                                    if (quantidadeAlterada != 1){
+                                        UtilsAlert.mostrarAviso(PessoasActivity.this, R.string.erro_ao_tentar_alterar);
+                                        return;
+                                    }
+
+                                    listaPessoas.remove(pessoaEditada);
+                                    listaPessoas.add(pessoaOriginal);
 
                                     ordenarLista();
 
@@ -353,11 +338,7 @@ public class PessoasActivity extends AppCompatActivity {
         Intent intentAbertura = new Intent(this, PessoaActivity.class);
 
         intentAbertura.putExtra(PessoaActivity.KEY_MODO, PessoaActivity.MODO_EDITAR);
-        intentAbertura.putExtra(PessoaActivity.KEY_NOME, pessoa.getNome());
-        intentAbertura.putExtra(PessoaActivity.KEY_PESO, pessoa.getPeso());
-        intentAbertura.putExtra(PessoaActivity.KEY_SUGESTAO, pessoa.isSugestao());
-        intentAbertura.putExtra(PessoaActivity.KEY_TIPO, pessoa.getTipo());
-        intentAbertura.putExtra(PessoaActivity.KEY_GENERO, pessoa.getGenero().toString());
+        intentAbertura.putExtra(PessoaActivity.KEY_ID, pessoa.getId());
 
         launcherEditarPessoa.launch(intentAbertura);
     }

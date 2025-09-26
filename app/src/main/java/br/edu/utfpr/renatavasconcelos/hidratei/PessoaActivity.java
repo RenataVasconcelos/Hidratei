@@ -22,15 +22,14 @@ import com.google.android.material.snackbar.Snackbar;
 
 import br.edu.utfpr.renatavasconcelos.hidratei.modelo.Genero;
 import br.edu.utfpr.renatavasconcelos.hidratei.modelo.Pessoa;
+import br.edu.utfpr.renatavasconcelos.hidratei.persistencia.PessoasDatabase;
 import br.edu.utfpr.renatavasconcelos.hidratei.utils.UtilsAlert;
 
 public class PessoaActivity extends AppCompatActivity {
-    public static final String KEY_NOME = "KEY_NOME";
-    public static final String KEY_PESO = "KEY_PESO";
-    public static final String KEY_SUGESTAO = "KEY_SUGESTAO";
-    public static final String KEY_TIPO = "KEY_TIPO";
-    public static final String KEY_GENERO = "KEY_GENERO";
+
     public static final String KEY_MODO = "MODO";
+    public static final String KEY_ID = "ID";
+
     public static final String KEY_SUGERIR_TIPO = "SUGERIR_TIPO";
     public static final String KEY_ULTIMO_TIPO = "ULTIMO_TIPO";
 
@@ -63,10 +62,13 @@ public class PessoaActivity extends AppCompatActivity {
         lerPreferencias();
 
         Intent intentAbertura = getIntent();
+
         Bundle bundle = intentAbertura.getExtras();
 
         if (bundle != null){
+
             modo = bundle.getInt(KEY_MODO);
+
             if (modo == MODO_NOVO){
 
                 setTitle(getString(R.string.novo_cadastro));
@@ -78,20 +80,19 @@ public class PessoaActivity extends AppCompatActivity {
             }else {
                 setTitle(getString(R.string.editar_pessoa));
 
-                String nome      = bundle.getString(PessoaActivity.KEY_NOME);
-                int peso         = bundle.getInt(PessoaActivity.KEY_PESO);
-                boolean sugestao = bundle.getBoolean(PessoaActivity.KEY_SUGESTAO);
-                int tipo         = bundle.getInt(PessoaActivity.KEY_TIPO);
-                String generoTexto    = bundle.getString(PessoaActivity.KEY_GENERO);
+                long id = bundle.getLong(KEY_ID);
 
-                Genero genero = Genero.valueOf(generoTexto);
+                PessoasDatabase database= PessoasDatabase.getInstance(this);
 
-                pessoaOriginal = new Pessoa(nome, peso, sugestao, tipo, genero);
+                pessoaOriginal = database.getPessoaDao().queryForId(id);
 
-                editTextNome.setText(nome);
-                editTextPeso.setText(String.valueOf(peso));
-                checkBoxSugestao.setChecked(sugestao);
-                spinnerTipo.setSelection(tipo);
+
+                editTextNome.setText(pessoaOriginal.getNome());
+                editTextPeso.setText(String.valueOf(pessoaOriginal.getPeso()));
+                checkBoxSugestao.setChecked(pessoaOriginal.isSugestao());
+                spinnerTipo.setSelection(pessoaOriginal.getTipo());
+
+                Genero genero = pessoaOriginal.getGenero();
 
                 if (genero == Genero.Feminino){
                     radioButtonFeminino.setChecked(true);
@@ -100,6 +101,9 @@ public class PessoaActivity extends AppCompatActivity {
                         radioButtonMasculino.setChecked(true);
                     }
                 }
+
+                editTextNome.requestFocus();
+                editTextNome.setSelection(editTextNome.getText().length());
 
 
             }
@@ -160,23 +164,28 @@ public class PessoaActivity extends AppCompatActivity {
         snackbar.show();
     }
     public void cadastro(){
+
         String nome = editTextNome.getText().toString();
+
         if (nome == null || nome.trim().isEmpty()){
             UtilsAlert.mostrarAviso(this, R.string.faltou_entrar_com_o_nome);
             editTextNome.requestFocus();
             return;
         }
-        nome =nome.trim();
+        nome = nome.trim();
 
         String pesoString = editTextPeso.getText().toString();
+
         if (pesoString == null || pesoString.trim().isEmpty()) {
             UtilsAlert.mostrarAviso(this, R.string.faltou_colocar_o_peso_atual);
             editTextPeso.requestFocus();
             return;
         }
         int peso = 0;
+
         try {
             peso = Integer.parseInt(pesoString);
+
         } catch (NumberFormatException e) {
             UtilsAlert.mostrarAviso(this, R.string.peso_deve_ser_um_numero_inteiro);
             editTextPeso.requestFocus();
@@ -210,12 +219,9 @@ public class PessoaActivity extends AppCompatActivity {
         }
         boolean sugestao = checkBoxSugestao.isChecked();
 
-        if(modo == MODO_EDITAR &&
-                nome.equalsIgnoreCase(pessoaOriginal.getNome()) &&
-                peso == pessoaOriginal.getPeso() &&
-                sugestao == pessoaOriginal.isSugestao() &&
-                tipo == pessoaOriginal.getTipo() &&
-                genero == pessoaOriginal.getGenero()){
+        Pessoa pessoa = new Pessoa(nome, peso, sugestao, tipo, genero);
+
+        if (pessoa.equals(pessoaOriginal)){
 
             setResult(PessoaActivity.RESULT_CANCELED);
             finish();
@@ -223,20 +229,41 @@ public class PessoaActivity extends AppCompatActivity {
 
         }
 
-        salvarUltimoTipo(tipo);
-
         Intent intentResposta = new Intent();
 
-        intentResposta.putExtra(KEY_NOME, nome);
-        intentResposta.putExtra(KEY_PESO, peso);
-        intentResposta.putExtra(KEY_SUGESTAO, sugestao);
-        intentResposta.putExtra(KEY_TIPO, tipo);
-        intentResposta.putExtra(KEY_GENERO, genero.toString());
+        PessoasDatabase database = PessoasDatabase.getInstance(this);
+
+        if (modo == MODO_NOVO){
+
+            long novoId = database.getPessoaDao().insert(pessoa);
+
+            if (novoId <= 0){
+                UtilsAlert.mostrarAviso(this,
+                                    R.string.erro_ao_tentar_inserir);
+                return;
+            }
+            pessoa.setId(novoId);
+
+        }else{
+
+            pessoa.setId(pessoaOriginal.getId());
+
+            int quantidadeAlterada = database.getPessoaDao().update(pessoa);
+
+            if (quantidadeAlterada != 1){
+                UtilsAlert.mostrarAviso(this, R.string.erro_ao_tentar_alterar);
+                return;
+            }
+
+        }
+
+        salvarUltimoTipo(tipo);
+
+        intentResposta.putExtra(KEY_ID, pessoa.getId());
 
         setResult(PessoaActivity.RESULT_OK, intentResposta);
 
         finish();
-
     }
 
     @Override
